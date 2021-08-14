@@ -49,16 +49,16 @@ ZTOOLS = zzdotu.o     zzdotc.o     zlatcpy.o    zmatadd.o     pzmatadd.o \
 all: single double complex complex16
 
 slapackaux:
-	( cd LAPACK; $(MAKE) single )
+	$(MAKE) -C LAPACK single
 
 dlapackaux:
-	( cd LAPACK; $(MAKE) double )
+	$(MAKE) -C LAPACK double
 
 clapackaux:
-	( cd LAPACK; $(MAKE) complex )
+	$(MAKE) -C LAPACK complex
 
 zlapackaux:
-	( cd LAPACK; $(MAKE) complex16 )
+	$(MAKE) -C LAPACK complex16
 
 integer: $(ATOOLS) $(ITOOLS)
 	$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) $(ATOOLS) $(ITOOLS)
@@ -82,7 +82,7 @@ complex16: zlapackaux integer $(ZTOOLS)
 
 clean :
 	rm -f *.o
-	( cd LAPACK; $(MAKE) clean )
+	$(MAKE) -C LAPACK clean
 
 .f.o : ; $(FC) -c $(FCFLAGS) $*.f
 

@@ -56,54 +56,54 @@ exe: blacsexe pblasexe redistexe scalapackexe
 clean: cleanlib cleanexe cleanexample
 
 blacslib:
-	( cd BLACS; $(MAKE) lib )
+	$(MAKE) -C BLACS lib
 
 pblaslib:
-	( cd PBLAS/SRC; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C PBLAS/SRC $(PRECISIONS)
 
 redistlib:
-	( cd REDIST/SRC; $(MAKE) integer $(PRECISIONS) )
+	$(MAKE) -C REDIST/SRC integer $(PRECISIONS)
 
 scalapacklib:
-	( cd SRC; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C SRC $(PRECISIONS)
 
 toolslib:
-	( cd TOOLS; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C TOOLS $(PRECISIONS)
 
 blacsexe:
-	( cd BLACS; $(MAKE) tester )
+	$(MAKE) -C BLACS tester
 
 pblasexe:
-	( cd PBLAS/TESTING; $(MAKE) $(PRECISIONS) )
-	( cd PBLAS/TIMING; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C PBLAS/TESTING $(PRECISIONS)
+	$(MAKE) -C PBLAS/TIMING $(PRECISIONS)
 
 scalapackexe:
-	( cd TESTING/LIN; $(MAKE) $(PRECISIONS) )
-	( cd TESTING/EIG; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C TESTING/LIN $(PRECISIONS)
+	$(MAKE) -C TESTING/EIG $(PRECISIONS)
 
 redistexe:
-	( cd REDIST/TESTING; $(MAKE) integer $(PRECISIONS) )
+	$(MAKE) -C REDIST/TESTING integer $(PRECISIONS)
 
 example:
-	( cd EXAMPLE; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C EXAMPLE $(PRECISIONS)
 
 cleanexe:
-	( cd PBLAS/TESTING; $(MAKE) clean )
-	( cd PBLAS/TIMING; $(MAKE) clean )
-	( cd TESTING/LIN; $(MAKE) clean )
-	( cd TESTING/EIG; $(MAKE) clean )
-	( cd REDIST/TESTING; $(MAKE) clean )
-	( cd BLACS/TESTING; $(MAKE) clean )
-	( cd TESTING; rm -f x* )
+	$(MAKE) -C PBLAS/TESTING clean
+	$(MAKE) -C PBLAS/TIMING clean
+	$(MAKE) -C TESTING/LIN clean
+	$(MAKE) -C TESTING/EIG clean
+	$(MAKE) -C REDIST/TESTING clean
+	$(MAKE) -C BLACS/TESTING clean
+	rm -f TESTING/x*
 
 cleanlib:
-	( cd BLACS; $(MAKE) clean )
-	( cd PBLAS/SRC; $(MAKE) clean )
-	( cd SRC; $(MAKE) clean )
-	( cd TOOLS; $(MAKE) clean )
-	( cd REDIST/SRC; $(MAKE) clean )
-	( rm -f $(SCALAPACKLIB) )
+	$(MAKE) -C BLACS clean
+	$(MAKE) -C PBLAS/SRC clean
+	$(MAKE) -C SRC clean
+	$(MAKE) -C TOOLS clean
+	$(MAKE) -C REDIST/SRC clean
+	rm -f $(SCALAPACKLIB)
 
 cleanexample:
-	( cd EXAMPLE; $(MAKE) clean )
+	$(MAKE) -C EXAMPLE clean
 

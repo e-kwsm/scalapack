@@ -1,11 +1,11 @@
 all : lib tester
 
 clean:
-	( cd TESTING ; make clean )
-	( cd SRC ; make clean )
+	$(MAKE) -C TESTING clean
+	$(MAKE) -C SRC clean
 
 tester :
-	( cd TESTING ; make )
+	$(MAKE) -C TESTING
 
 lib :
-	( cd SRC ; make )
+	$(MAKE) -C SRC

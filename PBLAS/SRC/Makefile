@@ -122,38 +122,38 @@ integer: $(PIBLAS)
 	$(RANLIB) ../../$(SCALAPACKLIB)
 
 single: integer $(PSBLAS)
-	( cd PBBLAS;  $(MAKE) single )
-	( cd PTZBLAS; $(MAKE) single )
-	( cd PTOOLS;  $(MAKE) single )
+	$(MAKE) -C PBBLAS  single
+	$(MAKE) -C PTZBLAS single
+	$(MAKE) -C PTOOLS  single
 	$(ARCH) $(ARCHFLAGS) ../../$(SCALAPACKLIB) $(PSBLAS)
 	$(RANLIB) ../../$(SCALAPACKLIB)
 
 double: integer $(PDBLAS)
-	( cd PBBLAS;  $(MAKE) double )
-	( cd PTZBLAS; $(MAKE) double )
-	( cd PTOOLS;  $(MAKE) double )
+	$(MAKE) -C PBBLAS  double
+	$(MAKE) -C PTZBLAS double
+	$(MAKE) -C PTOOLS  double
 	$(ARCH) $(ARCHFLAGS) ../../$(SCALAPACKLIB) $(PDBLAS)
 	$(RANLIB) ../../$(SCALAPACKLIB)
 
 complex: integer $(PCBLAS)
-	( cd PBBLAS;  $(MAKE) complex )
-	( cd PTZBLAS; $(MAKE) complex )
-	( cd PTOOLS;  $(MAKE) complex )
+	$(MAKE) -C PBBLAS  complex
+	$(MAKE) -C PTZBLAS complex
+	$(MAKE) -C PTOOLS  complex
 	$(ARCH) $(ARCHFLAGS) ../../$(SCALAPACKLIB) $(PCBLAS)
 	$(RANLIB) ../../$(SCALAPACKLIB)
 
 complex16: integer $(PZBLAS)
-	( cd PBBLAS;  $(MAKE) complex16 )
-	( cd PTZBLAS; $(MAKE) complex16 )
-	( cd PTOOLS;  $(MAKE) complex16 )
+	$(MAKE) -C PBBLAS  complex16
+	$(MAKE) -C PTZBLAS complex16
+	$(MAKE) -C PTOOLS  complex16
 	$(ARCH) $(ARCHFLAGS) ../../$(SCALAPACKLIB) $(PZBLAS)
 	$(RANLIB) ../../$(SCALAPACKLIB)
 
 clean :
 	rm -f *.o
-	( cd PBBLAS;  $(MAKE) clean )
-	( cd PTZBLAS; $(MAKE) clean )
-	( cd PTOOLS;  $(MAKE) clean )
+	$(MAKE) -C PBBLAS  clean
+	$(MAKE) -C PTZBLAS clean
+	$(MAKE) -C PTOOLS  clean
 
 .f.o : ; $(FC) -c $(FCFLAGS) $*.f
 
