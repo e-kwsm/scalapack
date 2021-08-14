@@ -346,7 +346,7 @@ void PB_Cptrm( TYPE, UTYP, SIDE, UPLO, TRANS, DIAG, N, K, ALPHA, A,
          {
 /*
 *  When the upper triangular part of sub( A ) should be operated with and
-*  one is planning to go south in the table, it is neccessary to take care
+*  one is planning to go south in the table, it is necessary to take care
 *  of the remaining columns of these imbloc rows immediately.
 */
             if( upper && ( Anq > inbloc ) )
@@ -362,7 +362,7 @@ void PB_Cptrm( TYPE, UTYP, SIDE, UPLO, TRANS, DIAG, N, K, ALPHA, A,
          {
 /*
 *  When the lower triangular part of sub( A ) should be operated with and
-*  one is planning to go east in the table, it is neccessary to take care
+*  one is planning to go east in the table, it is necessary to take care
 *  of the remaining rows of these inbloc columns immediately.
 */
             if( lower && ( Amp > imbloc ) )
@@ -647,7 +647,7 @@ void PB_Cptrm( TYPE, UTYP, SIDE, UPLO, TRANS, DIAG, N, K, ALPHA, A,
          {
 /*
 *  When the upper triangular part of sub( A ) should be operated with and
-*  one is planning to go south in the table, it is neccessary to take care
+*  one is planning to go south in the table, it is necessary to take care
 *  of the remaining columns of these imbloc rows immediately.
 */
             if( upper && ( Anq > inbloc ) )
@@ -663,7 +663,7 @@ void PB_Cptrm( TYPE, UTYP, SIDE, UPLO, TRANS, DIAG, N, K, ALPHA, A,
          {
 /*
 *  When the lower triangular part of sub( A ) should be operated with and
-*  one is planning to go east in the table, it is neccessary to take care
+*  one is planning to go east in the table, it is necessary to take care
 *  of the remaining rows of these inbloc columns immediately.
 */
             if( lower && ( Amp > imbloc ) )

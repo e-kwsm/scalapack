@@ -110,7 +110,7 @@ Int PB_Cnpreroc( N, I, INB, NB, PROC, SRCPROC, NPROCS )
    }
 /*
 *  Now everything is just like N, I=0, INB, NB, SRCPROC, NPROCS. If I am the
-*  source process, nothing preceeds me ...
+*  source process, nothing precedes me ...
 */
    if( PROC == SRCPROC ) return( 0 );
 /*
@@ -136,10 +136,10 @@ Int PB_Cnpreroc( N, I, INB, NB, PROC, SRCPROC, NPROCS )
 *  only ilocblk full blocks.
 *
 *  Therefore, when 0 < mydist <= nblocks - ilocblk * NPROCS, the number of rows
-*  or columns preceeding me is INB + ilocblk*NB + (mydist-1)*(ilocblk+1)*NB,
+*  or columns preceding me is INB + ilocblk*NB + (mydist-1)*(ilocblk+1)*NB,
 *  i.e. INB - NB + ( ilocblk+1 ) * NB * mydist. Otherwise, there are exactly
 *  NB * ilocblk * ( NPROCS - mydist ) rows or columns after me including mine,
-*  i.e N + NB * ilocblk * ( mydist - NPROCS ) rows or columns preceeding me.
+*  i.e N + NB * ilocblk * ( mydist - NPROCS ) rows or columns preceding me.
 */
    if( nblocks < NPROCS )
       return( ( ( mydist <= nblocks ) ? INB + NB * ( mydist - 1 ) : N ) );

@@ -177,7 +177,7 @@ Int PB_Cnnxtroc( N, I, INB, NB, PROC, SRCPROC, NPROCS )
 *  NB * ilocblk * ( NPROCS - mydist ) rows or columns after me including mine,
 *  i.e NB * ilocblk * ( NPROCS - 1 - mydist ) rows or columns following me.
 *  Finally, when 0 < mydist < nblocks - ilocblk * NPROCS, the number of rows
-*  or columns preceeding me is INB + ilocblk * NB + mydist*( ilocblk+1 )*NB
+*  or columns preceding me is INB + ilocblk * NB + mydist*( ilocblk+1 )*NB
 *  including mine, therefore there are N-INB-NB*( ilocblk+mydist*(ilocblk+1) )
 *  rows or columns following me.
 */

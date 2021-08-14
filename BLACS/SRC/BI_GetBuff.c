@@ -21,7 +21,7 @@
  *  The first routine, BI_GetBuff, checks if the ready buffer is big enough   *
  *  to fulfill the buffer request.  If not, the present ready buffer is    *
  *  is freed, and a new buffer of the required length is allocated.  If    *
- *  the buffer is of sufficent size already, no action is taken.           *
+ *  the buffer is of sufficient size already, no action is taken.           *
  *  This routine is purposely very short, as it is called at the beginning *
  *  of each broadcast/send operation.  All participating nodes             *
  *  are waiting on the source node, so this routine must be very cheap.	   *

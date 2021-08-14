@@ -81,7 +81,7 @@ va_dcl
 *
 *  LINE    (local input) INTEGER
 *          On entry,  LINE  specifies the line  number in the file where
-*          the error has occured. When  LINE is not a valid line number,
+*          the error has occurred. When LINE is not a valid line number,
 *
 *  ROUT    (global input) pointer to CHAR
 *          On entry, ROUT specifies the name of the routine calling this

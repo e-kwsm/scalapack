@@ -1445,7 +1445,7 @@
 *          On entry, NPROCS specifies the total number of processes.
 *
 *  THRESH  (global output) REAL
-*          On exit,  THRESH  specifies the threshhold value for the test
+*          On exit,  THRESH  specifies the threshold value for the test
 *          ratio.
 *
 *  ALPHA   (global output) COMPLEX

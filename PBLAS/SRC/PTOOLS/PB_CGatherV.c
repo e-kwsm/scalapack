@@ -389,7 +389,7 @@ void PB_CGatherV( TYPE, ALLOC, DIRECA, M, N, A, IA, JA, DESCA, AROC, B,
          {
 /*
 *  Otherwise, allocate some space for the rows or columns I have and the ones
-*  globally preceeding the ones I have, that I am about to receive.
+*  globally preceding the ones I have, that I am about to receive.
 */
             size     = TYPE->size; one = TYPE->one; zero = TYPE->zero;
             add      = TYPE->Fmmadd;
@@ -408,7 +408,7 @@ void PB_CGatherV( TYPE, ALLOC, DIRECA, M, N, A, IA, JA, DESCA, AROC, B,
                Aptr = Mptr( A, AiiR, AiiD, Ald, size );
                Bld  = AnpreR + AnpR;
 /*
-*  Receive the rows globally preceeding the ones I have
+*  Receive the rows globally preceding the ones I have
 */
                TYPE->Cgerv2d( ctxt, AnpreR, AnpD, *B, Bld, MModSub1( AmyprocR,
                               AnprocsR ), AmyprocD );
@@ -455,7 +455,7 @@ void PB_CGatherV( TYPE, ALLOC, DIRECA, M, N, A, IA, JA, DESCA, AROC, B,
                Aptr = Mptr( A, AiiD, AiiR, Ald, size );
                Bld  = MAX( 1, AnpD );
 /*
-*  Receive the columns globally preceeding the ones I have
+*  Receive the columns globally preceding the ones I have
 */
                TYPE->Cgerv2d( ctxt, AnpD, AnpreR, *B, Bld, AmyprocD,
                               MModSub1( AmyprocR, AnprocsR ) );
@@ -696,7 +696,7 @@ void PB_CGatherV( TYPE, ALLOC, DIRECA, M, N, A, IA, JA, DESCA, AROC, B,
       {
 /*
 *  If sub( A ) is spanning all process rows or columns of the grid, the result
-*  must be in the process row or column preceeding the one owning IA or JA,
+*  must be in the process row or column preceding the one owning IA or JA,
 *  don't you think ?
 */
          DESCB[Bsrc_] = MModSub1( AsrcR, AnprocsR );

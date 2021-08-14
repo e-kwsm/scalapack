@@ -394,7 +394,7 @@ void PB_CScatterV( TYPE, DIRECA, M, N, A, IA, JA, DESCA, AROC,
             if( Bnpre > 0 )
             {
 /*
-*  If some rows reside in the process row preceeding mine, then unpack my piece,
+*  If some rows reside in the process row preceding mine, then unpack my piece,
 *  sort the buffer and send those Bnpre rows to the previous process row.
 */
                add      = TYPE->Fmmadd; shft = TYPE->Frshft;
@@ -617,7 +617,7 @@ void PB_CScatterV( TYPE, DIRECA, M, N, A, IA, JA, DESCA, AROC,
             if( Bnpre > 0 )
             {
 /*
-*  If some columns reside in the process column preceeding mine, then unpack my
+*  If some columns reside in the process column preceding mine, then unpack my
 *  piece, sort the buffer and send those Bnpre columns to the previous process
 *  column.
 */

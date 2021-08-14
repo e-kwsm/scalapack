@@ -11,7 +11,7 @@ BLACBUFF *BI_Pack(BLACSCONTEXT *ctxt,BVOID *A,BLACBUFF *bp,MPI_Datatype Dtype)
 #endif
 
 /*
- * Some versions of mpich and its derivitives cannot handle 0 byte typedefs,
+ * Some versions of mpich and its derivatives cannot handle 0 byte typedefs,
  * so we have set MPI_BYTE as a flag for a 0 byte message
  */
 #ifdef ZeroByteTypeBug

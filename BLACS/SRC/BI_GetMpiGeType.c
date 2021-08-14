@@ -6,7 +6,7 @@ MPI_Datatype BI_GetMpiGeType(BLACSCONTEXT *ctxt, Int m, Int n, Int lda,
    MPI_Datatype GeType;
 
 /*
- * Some versions of mpich and its derivitives cannot handle 0 byte typedefs,
+ * Some versions of mpich and its derivatives cannot handle 0 byte typedefs,
  * so we set type MPI_BYTE as a flag for a 0 byte message
  */
 #ifdef ZeroByteTypeBug
