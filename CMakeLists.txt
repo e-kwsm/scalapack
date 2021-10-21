@@ -25,42 +25,7 @@ set(CMAKE_PREFIX_PATH "${MPI_BASE_DIR};${CMAKE_PREFIX_PATH}")
 #set(MPI_COMPILER ${MPI_BASE_DIR}/bin/mpicc)
 
 find_package(MPI)
-if (MPI_FOUND)
-   message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
-   INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
-
-   find_program(MPI_C_COMPILER
-      NAMES mpicc
-      HINTS "${MPI_BASE_DIR}"
-      PATH_SUFFIXES bin
-      DOC "MPI C compiler.")
-   MARK_AS_ADVANCED(MPI_C_COMPILER)
-   if ("${MPI_C_COMPILER}" STREQUAL "MPI_C_COMPILER-NOTFOUND")
-      message(ERROR "--> MPI C Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
-   else()
-      message(STATUS "--> MPI C Compiler : ${MPI_C_COMPILER}")
-      SET(CMAKE_C_COMPILER "${MPI_C_COMPILER}")
-      message(STATUS "--> C Compiler : ${CMAKE_C_COMPILER}")
-   endif()
-   find_program(MPI_Fortran_COMPILER
-      NAMES mpif77
-      HINTS "${MPI_BASE_DIR}"
-      PATH_SUFFIXES bin
-      DOC "MPI Fortran compiler.")
-   MARK_AS_ADVANCED(MPI_Fortran_COMPILER)
-
-
-
-   if ("${MPI_Fortran_COMPILER}" STREQUAL "MPI_Fortran_COMPILER-NOTFOUND")
-      message(ERROR "--> MPI Fortran Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
-   else()
-      message(STATUS "--> MPI Fortran Compiler : ${MPI_Fortran_COMPILER}")
-      SET(Fortran_COMPILER "${CMAKE_Fortran_COMPILER}")
-      #SET(CMAKE_Fortran_COMPILER "${MPI_Fortran_COMPILER}")
-      message(STATUS "--> Fortran Compiler : ${CMAKE_Fortran_COMPILER}")
-   endif()
-
-else()
+if (NOT MPI_FOUND)
    message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
    set(MPI_BASE_DIR ${MPI_BASE_DIR} CACHE PATH "MPI Path")
    UNSET(MPIEXEC CACHE)
@@ -74,6 +39,39 @@ else()
    message(FATAL_ERROR "--> MPI Library NOT FOUND -- please set MPI_BASE_DIR accordingly --")
 endif()
 
+message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
+INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
+
+find_program(MPI_C_COMPILER
+   NAMES mpicc
+   HINTS "${MPI_BASE_DIR}"
+   PATH_SUFFIXES bin
+   DOC "MPI C compiler.")
+MARK_AS_ADVANCED(MPI_C_COMPILER)
+if ("${MPI_C_COMPILER}" STREQUAL "MPI_C_COMPILER-NOTFOUND")
+   message(ERROR "--> MPI C Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
+else()
+   message(STATUS "--> MPI C Compiler : ${MPI_C_COMPILER}")
+   SET(CMAKE_C_COMPILER "${MPI_C_COMPILER}")
+   message(STATUS "--> C Compiler : ${CMAKE_C_COMPILER}")
+endif()
+find_program(MPI_Fortran_COMPILER
+   NAMES mpif77
+   HINTS "${MPI_BASE_DIR}"
+   PATH_SUFFIXES bin
+   DOC "MPI Fortran compiler.")
+MARK_AS_ADVANCED(MPI_Fortran_COMPILER)
+
+
+
+if ("${MPI_Fortran_COMPILER}" STREQUAL "MPI_Fortran_COMPILER-NOTFOUND")
+   message(ERROR "--> MPI Fortran Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
+else()
+   message(STATUS "--> MPI Fortran Compiler : ${MPI_Fortran_COMPILER}")
+   SET(Fortran_COMPILER "${CMAKE_Fortran_COMPILER}")
+   #SET(CMAKE_Fortran_COMPILER "${MPI_Fortran_COMPILER}")
+   message(STATUS "--> Fortran Compiler : ${CMAKE_Fortran_COMPILER}")
+endif()
 
 if (UNIX)
    if ("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
