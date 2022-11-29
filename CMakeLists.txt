@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.2)
-project(SCALAPACK C Fortran)
+cmake_minimum_required(VERSION 3.9)
+
+project(SCALAPACK VERSION 2.2.1 LANGUAGES C Fortran)
+
 # Configure the warning and code coverage suppression file
 configure_file(
   "${SCALAPACK_SOURCE_DIR}/CMAKE/CTestCustom.cmake.in"
@@ -19,16 +21,12 @@ endif ()
 #
 #   MPI
 #
-#set(MPI_BASE_DIR "/Users/julie/opt/openmpi/" CACHE PATH "MPI Path")
-#set(MPI_BASE_DIR "/Users/julie/opt/mpich2/" CACHE PATH "MPI Path")
 set(CMAKE_PREFIX_PATH "${MPI_BASE_DIR};${CMAKE_PREFIX_PATH}")
-#set(MPI_COMPILER ${MPI_BASE_DIR}/bin/mpicc)
 
 find_package(MPI)
 if (MPI_FOUND)
    message(STATUS "Found MPI_LIBRARY : ${MPI_FOUND} ")
-   INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
-
+   
    find_program(MPI_C_COMPILER
       NAMES mpicc
       HINTS "${MPI_BASE_DIR}"
@@ -39,7 +37,7 @@ if (MPI_FOUND)
       message(ERROR "--> MPI C Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
    else()
       message(STATUS "--> MPI C Compiler : ${MPI_C_COMPILER}")
-      SET(CMAKE_C_COMPILER "${MPI_C_COMPILER}")
+      #SET(CMAKE_C_COMPILER "${MPI_C_COMPILER}")
       message(STATUS "--> C Compiler : ${CMAKE_C_COMPILER}")
    endif()
    find_program(MPI_Fortran_COMPILER
@@ -48,8 +46,6 @@ if (MPI_FOUND)
       PATH_SUFFIXES bin
       DOC "MPI Fortran compiler.")
    MARK_AS_ADVANCED(MPI_Fortran_COMPILER)
-
-
 
    if ("${MPI_Fortran_COMPILER}" STREQUAL "MPI_Fortran_COMPILER-NOTFOUND")
       message(ERROR "--> MPI Fortran Compiler NOT FOUND (please set MPI_BASE_DIR accordingly")
@@ -105,6 +101,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SCALAPACK_BINARY_DIR}/lib)
 
 # --------------------------------------------------
+# By default static library
+function (invertBoolean varName varValue)
+  if (${varValue})
+    set(${varName} false PARENT_SCOPE)
+  else ()
+    set(${varName} true PARENT_SCOPE)
+  endif ()
+endfunction ()
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF )
+invertBoolean("BUILD_STATIC_LIBS" ${BUILD_SHARED_LIBS})
+if ((${BUILD_SHARED_LIBS} EQUAL ON) AND NOT CMAKE_POSITION_INDEPENDENT_CODE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif ()
+
+# --------------------------------------------------
 # Check for any necessary platform specific compiler flags
 include( CheckBLACSCompilerFlags )
 CheckBLACSCompilerFlags()
@@ -121,7 +132,9 @@ set(PKG_CONFIG_DIR ${libdir}/pkgconfig)
 include(FortranMangling)
 COMPILE(install_COMPILED)
 
-FORTRAN_MANGLING(CDEFS)
+if (NOT DEFINED CDEFS)
+  FORTRAN_MANGLING(CDEFS)
+endif ()
 #MESSAGE(STATUS "Setting CDEFS = ${CDEFS}")
 #set(CDEFS ${CDEFS} CACHE STRING "Fortran Mangling" FORCE)
 MESSAGE(STATUS "=========")
@@ -157,18 +170,18 @@ else(LAPACK_FOUND)
       message(STATUS "--> LAPACK and BLAS were not found. Reference LAPACK and BLAS will be downloaded and installed")
       include(ExternalProject)
       ExternalProject_Add(
-		lapack
-		URL http://www.netlib.org/lapack/lapack.tgz
-		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${SCALAPACK_BINARY_DIR}
+        lapack
+        URL http://www.netlib.org/lapack/lapack.tgz
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${SCALAPACK_BINARY_DIR}
         PREFIX ${SCALAPACK_BINARY_DIR}/dependencies
       )
-	  if (UNIX)
+      if (NOT MSVC)
          SET(LAPACK_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/liblapack.a CACHE STRING "LAPACK library" FORCE)
          SET(BLAS_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/libblas.a CACHE STRING "BLAS library" FORCE)
-	  else (UNIX) # On Windows
+      else () # MSVC
          SET(LAPACK_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/liblapack.lib CACHE STRING "LAPACK library" FORCE)
          SET(BLAS_LIBRARIES ${SCALAPACK_BINARY_DIR}/lib/libblas.lib CACHE STRING "BLAS library" FORCE)
-      endif (UNIX)
+      endif ()
    ENDIF()
 ENDIF()
 
@@ -176,11 +189,6 @@ message(STATUS "BLAS library: ${BLAS_LIBRARIES}")
 message(STATUS "LAPACK library: ${LAPACK_LIBRARIES}")
 
 MESSAGE(STATUS "=========")
-
-# --------------------------------------------------
-# By default static library
-OPTION(BUILD_SHARED_LIBS "Build shared libraries" OFF )
-OPTION(BUILD_STATIC_LIBS "Build static libraries" ON )
 
 # --------------------------------------------------
 # Subdirectories that need to be processed
@@ -230,19 +238,32 @@ add_subdirectory(SRC)
 append_subdir_files(src "SRC")
 append_subdir_files(src-C "SRC")
 
-if (UNIX)
+if (NOT MSVC)
    add_library(scalapack ${blacs} ${tools} ${tools-C} ${extra_lapack} ${pblas} ${pblas-F} ${ptzblas} ${ptools} ${pbblas} ${redist} ${src} ${src-C})
-   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+   set_target_properties(scalapack PROPERTIES
+    VERSION ${SCALAPACK_VERSION}
+    SOVERSION ${SCALAPACK_VERSION_MAJOR}.${SCALAPACK_VERSION_MINOR})
+   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} MPI::MPI_C)
    scalapack_install_library(scalapack)
-else (UNIX) # Need to separate Fortran and C Code
+else () # Need to separate Fortran and C Code
    OPTION(BUILD_SHARED_LIBS "Build shared libraries" ON )
    add_library(scalapack ${blacs} ${tools-C} ${pblas} ${ptools} ${redist} ${src-C})
-   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+   set_target_properties(scalapack PROPERTIES
+    VERSION ${SCALAPACK_VERSION}
+    SOVERSION ${SCALAPACK_VERSION_MAJOR}.${SCALAPACK_VERSION_MINOR})
+   target_link_libraries( scalapack ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} MPI::MPI_C)
    add_library(scalapack-F ${pblas-F} ${pbblas} ${ptzblas} ${tools} ${src} ${extra_lapack} )
-   target_link_libraries( scalapack-F ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+   set_target_properties(scalapack-F PROPERTIES
+    VERSION ${SCALAPACK_VERSION}
+    SOVERSION ${SCALAPACK_VERSION_MAJOR}.${SCALAPACK_VERSION_MINOR})
+   target_link_libraries( scalapack-F ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} MPI::MPI_Fortran)
    scalapack_install_library(scalapack)
    scalapack_install_library(scalapack-F)
-endif (UNIX)
+endif ()
+
+if(TARGET lapack)
+   add_dependencies(scalapack lapack)
+endif()
 
 option(SCALAPACK_BUILD_TESTS "Build all tests of the ScaLAPACK library" ON)
 if(${SCALAPACK_BUILD_TESTS})
@@ -255,10 +276,9 @@ endif()
 SET(CPACK_PACKAGE_NAME "ScaLAPACK")
 SET(CPACK_PACKAGE_VENDOR "University of Tennessee, Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ScaLAPACK- Linear Algebra Package")
-set(SCALAPACK_VERSION 2.1.0)
-set(CPACK_PACKAGE_VERSION_MAJOR 2)
-set(CPACK_PACKAGE_VERSION_MINOR 1)
-set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_VERSION_MAJOR ${SCALAPACK_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${SCALAPACK_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${SCALAPACK_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "SCALAPACK")
 IF(WIN32 AND NOT UNIX)
